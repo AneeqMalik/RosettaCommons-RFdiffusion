@@ -8,8 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends awscli jq pytho
 
 WORKDIR /opt/program
 
-# Copy scripts
-COPY . .
+# Copy only the wrapper scripts from the sagemaker folder in the build context
+COPY sagemaker/transform.py ./
+COPY sagemaker/download_models.sh ./
 
 RUN chmod +x transform.py download_models.sh \
     && if [ ! -e /usr/bin/python ]; then ln -s $(which python3) /usr/bin/python; fi

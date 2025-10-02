@@ -36,6 +36,9 @@ RUN git clone --depth=1 https://github.com/RosettaCommons/RFdiffusion.git /opt/R
 RUN mkdir -p /opt/ml/model \
 	&& bash /opt/RFdiffusion/scripts/download_models.sh /opt/ml/model
 
+# Unpack optional PPI scaffold bundle so examples reference concrete files.
+RUN tar -xzvf /opt/RFdiffusion/examples/ppi_scaffolds_subset.tar.gz -C /opt/RFdiffusion/examples
+
 RUN python -m pip install --no-cache-dir dgl==1.0.2+cu116 -f https://data.dgl.ai/wheels/cu116/repo.html
 RUN python -m pip install --no-cache-dir torch==1.12.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116
 RUN python -m pip install --no-cache-dir \

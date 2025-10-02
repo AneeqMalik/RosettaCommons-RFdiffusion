@@ -22,6 +22,9 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1 \
 
 RUN python -m pip install --upgrade pip setuptools wheel
 
+# RFdiffusion and its compiled extensions target NumPy 1.x.
+RUN python -m pip install --no-cache-dir "numpy<2"
+
 WORKDIR /app
 
 COPY requirements.txt .

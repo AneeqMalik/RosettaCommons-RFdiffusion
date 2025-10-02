@@ -34,6 +34,21 @@ docker run --rm --gpus all \
   -v $PWD/outputs:/opt/ml/output/data \
   -p 8080:8080 \
   rfdiffusion-sagemaker:latest
+
+### Download model checkpoints
+
+RFdiffusion expects its `.pt` checkpoints under `/opt/ml/model` (mirrored from your host `models/` directory in the example above). Populate them once with the bundled helper script:
+
+```bash
+mkdir -p models
+docker run --rm \
+  -v $PWD/models:/opt/ml/model \
+  --entrypoint bash \
+  rfdiffusion-sagemaker:latest \
+  -c "/opt/RFdiffusion/scripts/download_models.sh /opt/ml/model"
+```
+
+Alternatively, set `"auto_download_weights": true` in your `/invocations` payload (or export `RF_AUTO_DOWNLOAD_MODELS=1`) to let the service pull the files at request time when the directory is empty.
 ```
 
 ## Upload to Amazon ECR (optional)

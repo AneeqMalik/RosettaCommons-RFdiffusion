@@ -54,6 +54,27 @@ RUN python -m pip install --no-cache-dir -r /opt/RFdiffusion/env/SE3Transformer/
 
 RUN python -m pip install --no-cache-dir /opt/RFdiffusion --no-deps
 
+# Ensure example assets (e.g. default input PDBs and scaffolds) are available to the installed package.
+RUN python - <<'PY'
+import pathlib
+import shutil
+import site
+
+source = pathlib.Path("/opt/RFdiffusion/examples")
+
+targets = set()
+targets.update(pathlib.Path(p) / "rfdiffusion" / "examples" for p in site.getsitepackages())
+user_site = site.getusersitepackages()
+if user_site:
+	targets.add(pathlib.Path(user_site) / "rfdiffusion" / "examples")
+
+for target in targets:
+	if target.exists():
+		shutil.rmtree(target)
+	target.parent.mkdir(parents=True, exist_ok=True)
+	shutil.copytree(source, target)
+PY
+
 COPY . .
 
 ENV RF_DIFFUSION_HOME=/opt/RFdiffusion \

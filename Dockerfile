@@ -8,6 +8,7 @@ RUN apt-get update \
 		ca-certificates \
 		cmake \
 		git \
+		git-lfs \
 		ninja-build \
 		python3.9 \
 		python3.9-dev \
@@ -30,7 +31,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
-RUN git clone --depth=1 https://github.com/RosettaCommons/RFdiffusion.git /opt/RFdiffusion
+RUN git clone --depth=1 https://github.com/RosettaCommons/RFdiffusion.git /opt/RFdiffusion \
+	&& git -C /opt/RFdiffusion lfs install --local \
+	&& git -C /opt/RFdiffusion lfs pull
 
 # Preload default RFdiffusion checkpoints into the SageMaker model directory.
 RUN mkdir -p /opt/ml/model \

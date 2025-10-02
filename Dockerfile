@@ -32,6 +32,10 @@ RUN python -m pip install --no-cache-dir -r requirements.txt
 
 RUN git clone --depth=1 https://github.com/RosettaCommons/RFdiffusion.git /opt/RFdiffusion
 
+# Preload default RFdiffusion checkpoints into the SageMaker model directory.
+RUN mkdir -p /opt/ml/model \
+	&& bash /opt/RFdiffusion/scripts/download_models.sh /opt/ml/model
+
 RUN python -m pip install --no-cache-dir dgl==1.0.2+cu116 -f https://data.dgl.ai/wheels/cu116/repo.html
 RUN python -m pip install --no-cache-dir torch==1.12.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116
 RUN python -m pip install --no-cache-dir \
